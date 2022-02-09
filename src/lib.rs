@@ -94,8 +94,19 @@ struct Input<'a> {
 
 impl<'a> Input<'a> {
     fn parse(input: &'a str) -> Result<Self, TokenStream> {
-        let mut split = input.split_whitespace();
-        let file_name = split.next().unwrap();
+        let (file, input) = if let Some(input) = input.strip_prefix('"') {
+            if let Some(end_file_idx) = input.find('"') {
+                (&input[..end_file_idx], &input[end_file_idx+1..])
+            } else {
+                return Err(compile_error("Missing '\"' at the end of file path"));
+            }
+        } else {
+            let mut split = input.split_whitespace();
+            let file = split.next().unwrap();
+            (file, &input[file.len()..])
+        };
+
+        let mut split = input.trim().split_whitespace();
 
         let typ = match split.next() {
             Some("as") => match split.next() {
@@ -110,8 +121,6 @@ impl<'a> Input<'a> {
             Some(other) => return Err(compile_error(format_args!("Unsupported syntax after file name '{}'", other))),
             None => Type::U8,
         };
-
-        let file = file_name.trim_end_matches('"').trim_start_matches('"').trim();
 
         Ok(Self {
             file,
@@ -138,8 +147,10 @@ impl<'a> Input<'a> {
 ///
 ///let bytes = include_bytes!("tests/include.in");
 ///let bytes_u16 = include_bytes!("tests/include.in" as u16);
+///let bytes_u16_2 = include_bytes!("tests/include with whitespaces.in" as u16);
 ///
 ///assert_eq!(bytes.len(), bytes_u16.len() * 2);
+///assert_eq!(bytes.len(), bytes_u16_2.len() * 2);
 ///```
 pub fn include_bytes(input: TokenStream) -> TokenStream {
     let input = input.to_string();
