@@ -5,7 +5,7 @@
 [![Build](https://github.com/DoumanAsh/include-bytes-plus/workflows/Rust/badge.svg)](https://github.com/DoumanAsh/include-bytes-plus/actions?query=workflow%3ARust)
 
 
-Improved version of Rust's `include_bytes` macro that allows to reinterpret input as differently array.
+Improved version of Rust's `include_bytes` macro that allows to reinterpret input as differently typed array.
 
 Due to inability to capture current file path in the stable Rust, this macro only accepts paths relative to crate's root.
 
