@@ -237,6 +237,12 @@ impl<'a> Input<'a> {
 ///
 ///Due to `Span::source_file` being unstable, the file is searched relative to crate root.
 ///
+///# Supported types:
+///
+///- Primitive fixed sized unsigned integers;
+///
+///- Arrays with unsigned integers;
+///
 ///# Usage:
 ///
 ///```
@@ -256,7 +262,21 @@ impl<'a> Input<'a> {
 ///assert_eq!(bytes_u16_4[0].len(), 12);
 ///assert_eq!(bytes_u16_4[1].len(), 12);
 ///```
+///
+///# Debugging timings:
+///
+///Set env variable `RUST_INCLUDE_BYTES_LOG=1` to enable logging of each parsed file statistics
 pub fn include_bytes(input: TokenStream) -> TokenStream {
+    let is_log = match std::env::var("RUST_INCLUDE_BYTES_LOG") {
+        Ok(res) => match res.as_str() {
+            "1" | "true" => true,
+            _ => false,
+        },
+        _ => false,
+    };
+
+    let now = std::time::Instant::now();
+
     let input = input.to_string();
     let input = input.trim();
 
@@ -307,6 +327,18 @@ pub fn include_bytes(input: TokenStream) -> TokenStream {
             Err(error) => {
                 return compile_error(format_args!("{}: Error reading file: {}", args.file, error))
             },
+        }
+    }
+
+    if is_log {
+        let elapsed = now.elapsed();
+        let secs = elapsed.as_secs();
+        let ms = elapsed.subsec_millis();
+
+        if secs > 0 {
+            println!("{}: parsed {}b in {}.{} seconds", args.file, file_len, secs, ms);
+        } else {
+            println!("{}: parsed {}b in {} ms", args.file, file_len, ms);
         }
     }
 

@@ -9,6 +9,12 @@ Improved version of Rust's `include_bytes` macro that allows to reinterpret inpu
 
 Due to inability to capture current file path in the stable Rust, this macro only accepts paths relative to crate's root.
 
+# Supported types:
+
+- Primitive fixed sized unsigned integers;
+
+- Arrays with unsigned integers;
+
 # Usage:
 
 ```rust
@@ -29,3 +35,7 @@ assert_eq!(bytes_u16_4.len(), 2);
 assert_eq!(bytes_u16_4[0].len(), 12);
 assert_eq!(bytes_u16_4[1].len(), 12);
 ```
+
+# Debugging timings:
+
+Set env variable `RUST_INCLUDE_BYTES_LOG=1` to enable logging of each parsed file statistics
