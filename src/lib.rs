@@ -301,7 +301,7 @@ pub fn include_bytes(input: TokenStream) -> TokenStream {
                 } else {
                     //not enough data to write expression
                     //wait another read.
-                    cursor += size;
+                    cursor = buf_len;
                 }
             },
             Err(error) => {

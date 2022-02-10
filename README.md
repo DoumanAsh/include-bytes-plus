@@ -16,6 +16,16 @@ use include_bytes_plus::include_bytes;
 
 let bytes = include_bytes!("tests/include.in");
 let bytes_u16 = include_bytes!("tests/include.in" as u16);
+let bytes_u16_2 = include_bytes!("tests/include with whitespaces.in" as u16);
+let bytes_u16_3 = include_bytes!("tests/include with whitespaces.in" as [u8; 48]);
+let bytes_u16_4 = include_bytes!("tests/include with whitespaces.in" as [u16; 12]);
 
 assert_eq!(bytes.len(), bytes_u16.len() * 2);
+assert_eq!(bytes.len(), bytes_u16.len() * 2);
+assert_eq!(bytes.len(), bytes_u16_2.len() * 2);
+assert_eq!(bytes_u16_3.len(), 1);
+assert_eq!(bytes_u16_3[0].len(), 48);
+assert_eq!(bytes_u16_4.len(), 2);
+assert_eq!(bytes_u16_4[0].len(), 12);
+assert_eq!(bytes_u16_4[1].len(), 12);
 ```
