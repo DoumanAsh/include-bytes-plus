@@ -11,7 +11,7 @@ Due to inability to capture current file path in the stable Rust, this macro onl
 
 # Supported types:
 
-- Primitive fixed sized unsigned integers;
+- Primitive fixed sized unsigned integers with optional endianness suffix;
 
 - Arrays with unsigned integers;
 
@@ -25,6 +25,7 @@ let bytes_u16 = include_bytes!("tests/include.in" as u16);
 let bytes_u16_2 = include_bytes!("tests/include with whitespaces.in" as u16);
 let bytes_u16_3 = include_bytes!("tests/include with whitespaces.in" as [u8; 48]);
 let bytes_u16_4 = include_bytes!("tests/include with whitespaces.in" as [u16; 12]);
+let bytes_u16be = include_bytes!("tests/include.in" as u16be);
 
 assert_eq!(bytes.len(), bytes_u16.len() * 2);
 assert_eq!(bytes.len(), bytes_u16.len() * 2);
@@ -34,6 +35,7 @@ assert_eq!(bytes_u16_3[0].len(), 48);
 assert_eq!(bytes_u16_4.len(), 2);
 assert_eq!(bytes_u16_4[0].len(), 12);
 assert_eq!(bytes_u16_4[1].len(), 12);
+assert_eq!(bytes_u16be.len(), bytes_u16.len());
 ```
 
 # Debugging timings:
