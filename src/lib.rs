@@ -355,7 +355,9 @@ impl<'a> Input<'a> {
 ///
 ///To reinterpret it as different type add `as <type>` where type can be: `u8`, `u16`, `u32`, `u64` or `u128`.
 ///
-///Change the endianness of how the file is interpreted by adding `le` or `be` suffix, e.g. `u16le` or `u32be`.
+///You can use an endianness suffix to change the expected endianness within a file.
+///When endianness is specified the macro shall treat integers within a file correspondingly to the suffix and
+///convert it to the target's native endianness. Allowed suffixes: le and be, eg. `u16le` or `u32be`.
 ///The default endianness is native.
 ///
 ///# NOTE:
