@@ -117,14 +117,13 @@ fn should_include_u16le() {
 #[test]
 fn should_include_u16be() {
     let included = include_bytes!("tests/include.in" as u16be);
-    let mut expected = read("tests/include.in").expect("To read source code");
-    // swap bytes
-    for i in 0..expected.len() / 2 {
-        expected.swap(i * 2, i * 2 + 1);
-    }
+    let expected = read("tests/include.in").expect("To read source code");
     let expected = unsafe {
-        slice::from_raw_parts(expected.as_ptr() as *const u16, expected.len() / 2)
+        slice::from_raw_parts_mut(expected.as_ptr() as *mut u16, expected.len() / 2)
     };
+    for integer in expected.iter_mut() {
+        *integer = integer.swap_bytes();
+    }
     assert!(included == expected, "included doesn't match expected file output");
 }
 
@@ -152,14 +151,15 @@ fn should_include_array_u16le_single() {
 #[test]
 fn should_include_array_u16be_single() {
     let included = include_bytes!("tests/include.in" as [u16be; 24]);
-    let mut expected = read("tests/include.in").expect("To read source code");
-    // swap bytes
-    for i in 0..expected.len() / 2 {
-        expected.swap(i * 2, i * 2 + 1);
-    }
+    let expected = read("tests/include.in").expect("To read source code");
     let expected = unsafe {
-        slice::from_raw_parts(expected.as_ptr() as *const [u16; 24], included.len())
+        slice::from_raw_parts_mut(expected.as_ptr() as *mut [u16; 24], included.len())
     };
+    for array in expected.iter_mut() {
+        for integer in array.iter_mut() {
+            *integer = integer.swap_bytes();
+        }
+    }
     assert!(included == expected, "included doesn't match expected file output");
 }
 
@@ -187,14 +187,15 @@ fn should_include_array_u16le_multiple() {
 #[test]
 fn should_include_array_u16be_multiple() {
     let included = include_bytes!("tests/include.in" as [u16be; 12]);
-    let mut expected = read("tests/include.in").expect("To read source code");
-    // swap bytes
-    for i in 0..expected.len() / 2 {
-        expected.swap(i * 2, i * 2 + 1);
-    }
+    let expected = read("tests/include.in").expect("To read source code");
     let expected = unsafe {
-        slice::from_raw_parts(expected.as_ptr() as *const [u16; 12], included.len())
+        slice::from_raw_parts_mut(expected.as_ptr() as *mut [u16; 12], included.len())
     };
+    for array in expected.iter_mut() {
+        for integer in array.iter_mut() {
+            *integer = integer.swap_bytes();
+        }
+    }
     assert!(included == expected, "included doesn't match expected file output");
 }
 
@@ -222,15 +223,13 @@ fn should_include_u32le() {
 #[test]
 fn should_include_u32be() {
     let included = include_bytes!("tests/include.in" as u32be);
-    let mut expected = read("tests/include.in").expect("To read source code");
-    // swap bytes
-    for i in 0..expected.len() / 4 {
-        expected.swap(i * 4, i * 4 + 3);
-        expected.swap(i * 4 + 1, i * 4 + 2);
-    }
+    let expected = read("tests/include.in").expect("To read source code");
     let expected = unsafe {
-        slice::from_raw_parts(expected.as_ptr() as *const u32, expected.len() / 4)
+        slice::from_raw_parts_mut(expected.as_ptr() as *mut u32, expected.len() / 4)
     };
+    for integer in expected.iter_mut() {
+        *integer = integer.swap_bytes();
+    }
     assert!(included == expected, "included doesn't match expected file output");
 }
 
@@ -258,15 +257,15 @@ fn should_include_array_u32le_single() {
 #[test]
 fn should_include_array_u32be_single() {
     let included = include_bytes!("tests/include.in" as [u32be; 12]);
-    let mut expected = read("tests/include.in").expect("To read source code");
-    // swap bytes
-    for i in 0..expected.len() / 4 {
-        expected.swap(i * 4, i * 4 + 3);
-        expected.swap(i * 4 + 1, i * 4 + 2);
-    }
+    let expected = read("tests/include.in").expect("To read source code");
     let expected = unsafe {
-        slice::from_raw_parts(expected.as_ptr() as *const [u32; 12], included.len())
+        slice::from_raw_parts_mut(expected.as_ptr() as *mut [u32; 12], included.len())
     };
+    for array in expected.iter_mut() {
+        for integer in array.iter_mut() {
+            *integer = integer.swap_bytes();
+        }
+    }
     assert!(included == expected, "included doesn't match expected file output");
 }
 
@@ -294,15 +293,15 @@ fn should_include_array_u32le_multiple() {
 #[test]
 fn should_include_array_u32be_multiple() {
     let included = include_bytes!("tests/include.in" as [u32be; 6]);
-    let mut expected = read("tests/include.in").expect("To read source code");
-    // swap bytes
-    for i in 0..expected.len() / 4 {
-        expected.swap(i * 4, i * 4 + 3);
-        expected.swap(i * 4 + 1, i * 4 + 2);
-    }
+    let expected = read("tests/include.in").expect("To read source code");
     let expected = unsafe {
-        slice::from_raw_parts(expected.as_ptr() as *const [u32; 6], included.len())
+        slice::from_raw_parts_mut(expected.as_ptr() as *mut [u32; 6], included.len())
     };
+    for array in expected.iter_mut() {
+        for integer in array.iter_mut() {
+            *integer = integer.swap_bytes();
+        }
+    }
     assert!(included == expected, "included doesn't match expected file output");
 }
 
@@ -330,17 +329,13 @@ fn should_include_u64le() {
 #[test]
 fn should_include_u64be() {
     let included = include_bytes!("tests/include.in" as u64be);
-    let mut expected = read("tests/include.in").expect("To read source code");
-    // swap bytes
-    for i in 0..expected.len() / 8 {
-        expected.swap(i * 8, i * 8 + 7);
-        expected.swap(i * 8 + 1, i * 8 + 6);
-        expected.swap(i * 8 + 2, i * 8 + 5);
-        expected.swap(i * 8 + 3, i * 8 + 4);
-    }
+    let expected = read("tests/include.in").expect("To read source code");
     let expected = unsafe {
-        slice::from_raw_parts(expected.as_ptr() as *const u64, expected.len() / 8)
+        slice::from_raw_parts_mut(expected.as_ptr() as *mut u64, expected.len() / 8)
     };
+    for integer in expected.iter_mut() {
+        *integer = integer.swap_bytes();
+    }
     assert!(included == expected, "included doesn't match expected file output");
 }
 
@@ -368,17 +363,15 @@ fn should_include_array_u64le_single() {
 #[test]
 fn should_include_array_u64be_single() {
     let included = include_bytes!("tests/include.in" as [u64be; 6]);
-    let mut expected = read("tests/include.in").expect("To read source code");
-    // swap bytes
-    for i in 0..expected.len() / 8 {
-        expected.swap(i * 8, i * 8 + 7);
-        expected.swap(i * 8 + 1, i * 8 + 6);
-        expected.swap(i * 8 + 2, i * 8 + 5);
-        expected.swap(i * 8 + 3, i * 8 + 4);
-    }
+    let expected = read("tests/include.in").expect("To read source code");
     let expected = unsafe {
-        slice::from_raw_parts(expected.as_ptr() as *const [u64; 6], included.len())
+        slice::from_raw_parts_mut(expected.as_ptr() as *mut [u64; 6], included.len())
     };
+    for array in expected.iter_mut() {
+        for integer in array.iter_mut() {
+            *integer = integer.swap_bytes();
+        }
+    }
     assert!(included == expected, "included doesn't match expected file output");
 }
 
@@ -406,17 +399,15 @@ fn should_include_array_u64le_multiple() {
 #[test]
 fn should_include_array_u64be_multiple() {
     let included = include_bytes!("tests/include.in" as [u64be; 3]);
-    let mut expected = read("tests/include.in").expect("To read source code");
-    // swap bytes
-    for i in 0..expected.len() / 8 {
-        expected.swap(i * 8, i * 8 + 7);
-        expected.swap(i * 8 + 1, i * 8 + 6);
-        expected.swap(i * 8 + 2, i * 8 + 5);
-        expected.swap(i * 8 + 3, i * 8 + 4);
-    }
+    let expected = read("tests/include.in").expect("To read source code");
     let expected = unsafe {
-        slice::from_raw_parts(expected.as_ptr() as *const [u64; 3], included.len())
+        slice::from_raw_parts_mut(expected.as_ptr() as *mut [u64; 3], included.len())
     };
+    for array in expected.iter_mut() {
+        for integer in array.iter_mut() {
+            *integer = integer.swap_bytes();
+        }
+    }
     assert!(included == expected, "included doesn't match expected file output");
 }
 
@@ -444,21 +435,13 @@ fn should_include_u128le() {
 #[test]
 fn should_include_u128be() {
     let included = include_bytes!("tests/include.in" as u128be);
-    let mut expected = read("tests/include.in").expect("To read source code");
-    // swap bytes
-    for i in 0..expected.len() / 16 {
-        expected.swap(i * 16, i * 16 + 15);
-        expected.swap(i * 16 + 1, i * 16 + 14);
-        expected.swap(i * 16 + 2, i * 16 + 13);
-        expected.swap(i * 16 + 3, i * 16 + 12);
-        expected.swap(i * 16 + 4, i * 16 + 11);
-        expected.swap(i * 16 + 5, i * 16 + 10);
-        expected.swap(i * 16 + 6, i * 16 + 9);
-        expected.swap(i * 16 + 7, i * 16 + 8);
-    }
+    let expected = read("tests/include.in").expect("To read source code");
     let expected = unsafe {
-        slice::from_raw_parts(expected.as_ptr() as *const u128, expected.len() / 16)
+        slice::from_raw_parts_mut(expected.as_ptr() as *mut u128, expected.len() / 16)
     };
+    for integer in expected.iter_mut() {
+        *integer = integer.swap_bytes();
+    }
     assert!(included == expected, "included doesn't match expected file output");
 }
 
@@ -486,20 +469,14 @@ fn should_include_array_u128le_single() {
 #[test]
 fn should_include_array_u128be_single() {
     let included = include_bytes!("tests/include.in" as [u128be; 3]);
-    let mut expected = read("tests/include.in").expect("To read source code");
-    // swap bytes
-    for i in 0..expected.len() / 16 {
-        expected.swap(i * 16, i * 16 + 15);
-        expected.swap(i * 16 + 1, i * 16 + 14);
-        expected.swap(i * 16 + 2, i * 16 + 13);
-        expected.swap(i * 16 + 3, i * 16 + 12);
-        expected.swap(i * 16 + 4, i * 16 + 11);
-        expected.swap(i * 16 + 5, i * 16 + 10);
-        expected.swap(i * 16 + 6, i * 16 + 9);
-        expected.swap(i * 16 + 7, i * 16 + 8);
-    }
+    let expected = read("tests/include.in").expect("To read source code");
     let expected = unsafe {
-        slice::from_raw_parts(expected.as_ptr() as *const [u128; 3], included.len())
+        slice::from_raw_parts_mut(expected.as_ptr() as *mut [u128; 3], included.len())
     };
+    for array in expected.iter_mut() {
+        for integer in array.iter_mut() {
+            *integer = integer.swap_bytes();
+        }
+    }
     assert!(included == expected, "included doesn't match expected file output");
 }
