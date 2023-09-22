@@ -121,6 +121,7 @@ fn should_include_u16be() {
     let expected = unsafe {
         slice::from_raw_parts_mut(expected.as_ptr() as *mut u16, expected.len() / 2)
     };
+    #[cfg(target_endian = "little")]
     for integer in expected.iter_mut() {
         *integer = integer.swap_bytes();
     }
@@ -148,6 +149,7 @@ fn should_include_array_u16le_single() {
     assert!(included == expected, "included doesn't match expected file output");
 }
 
+#[cfg(target_endian = "little")]
 #[test]
 fn should_include_array_u16be_single() {
     let included = include_bytes!("tests/include.in" as [u16be; 24]);
@@ -155,6 +157,7 @@ fn should_include_array_u16be_single() {
     let expected = unsafe {
         slice::from_raw_parts_mut(expected.as_ptr() as *mut [u16; 24], included.len())
     };
+    #[cfg(target_endian = "little")]
     for array in expected.iter_mut() {
         for integer in array.iter_mut() {
             *integer = integer.swap_bytes();
@@ -191,6 +194,7 @@ fn should_include_array_u16be_multiple() {
     let expected = unsafe {
         slice::from_raw_parts_mut(expected.as_ptr() as *mut [u16; 12], included.len())
     };
+    #[cfg(target_endian = "little")]
     for array in expected.iter_mut() {
         for integer in array.iter_mut() {
             *integer = integer.swap_bytes();
@@ -227,6 +231,7 @@ fn should_include_u32be() {
     let expected = unsafe {
         slice::from_raw_parts_mut(expected.as_ptr() as *mut u32, expected.len() / 4)
     };
+    #[cfg(target_endian = "little")]
     for integer in expected.iter_mut() {
         *integer = integer.swap_bytes();
     }
@@ -261,6 +266,7 @@ fn should_include_array_u32be_single() {
     let expected = unsafe {
         slice::from_raw_parts_mut(expected.as_ptr() as *mut [u32; 12], included.len())
     };
+    #[cfg(target_endian = "little")]
     for array in expected.iter_mut() {
         for integer in array.iter_mut() {
             *integer = integer.swap_bytes();
@@ -297,6 +303,7 @@ fn should_include_array_u32be_multiple() {
     let expected = unsafe {
         slice::from_raw_parts_mut(expected.as_ptr() as *mut [u32; 6], included.len())
     };
+    #[cfg(target_endian = "little")]
     for array in expected.iter_mut() {
         for integer in array.iter_mut() {
             *integer = integer.swap_bytes();
@@ -333,6 +340,7 @@ fn should_include_u64be() {
     let expected = unsafe {
         slice::from_raw_parts_mut(expected.as_ptr() as *mut u64, expected.len() / 8)
     };
+    #[cfg(target_endian = "little")]
     for integer in expected.iter_mut() {
         *integer = integer.swap_bytes();
     }
@@ -367,6 +375,7 @@ fn should_include_array_u64be_single() {
     let expected = unsafe {
         slice::from_raw_parts_mut(expected.as_ptr() as *mut [u64; 6], included.len())
     };
+    #[cfg(target_endian = "little")]
     for array in expected.iter_mut() {
         for integer in array.iter_mut() {
             *integer = integer.swap_bytes();
@@ -403,6 +412,7 @@ fn should_include_array_u64be_multiple() {
     let expected = unsafe {
         slice::from_raw_parts_mut(expected.as_ptr() as *mut [u64; 3], included.len())
     };
+    #[cfg(target_endian = "little")]
     for array in expected.iter_mut() {
         for integer in array.iter_mut() {
             *integer = integer.swap_bytes();
@@ -439,6 +449,7 @@ fn should_include_u128be() {
     let expected = unsafe {
         slice::from_raw_parts_mut(expected.as_ptr() as *mut u128, expected.len() / 16)
     };
+    #[cfg(target_endian = "little")]
     for integer in expected.iter_mut() {
         *integer = integer.swap_bytes();
     }
@@ -473,6 +484,7 @@ fn should_include_array_u128be_single() {
     let expected = unsafe {
         slice::from_raw_parts_mut(expected.as_ptr() as *mut [u128; 3], included.len())
     };
+    #[cfg(target_endian = "little")]
     for array in expected.iter_mut() {
         for integer in array.iter_mut() {
             *integer = integer.swap_bytes();
