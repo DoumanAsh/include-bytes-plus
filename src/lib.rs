@@ -23,6 +23,16 @@ enum Primitive {
     U32,
     U64,
     U128,
+    U8LE,
+    U16LE,
+    U32LE,
+    U64LE,
+    U128LE,
+    U8BE,
+    U16BE,
+    U32BE,
+    U64BE,
+    U128BE,
 }
 
 impl Primitive {
@@ -33,6 +43,16 @@ impl Primitive {
             Primitive::U32 => mem::size_of::<u32>(),
             Primitive::U64 => mem::size_of::<u64>(),
             Primitive::U128 => mem::size_of::<u128>(),
+            Primitive::U8LE => mem::size_of::<u8>(),
+            Primitive::U16LE => mem::size_of::<u16>(),  
+            Primitive::U32LE => mem::size_of::<u32>(),
+            Primitive::U64LE => mem::size_of::<u64>(),
+            Primitive::U128LE => mem::size_of::<u128>(),
+            Primitive::U8BE => mem::size_of::<u8>(),
+            Primitive::U16BE => mem::size_of::<u16>(),
+            Primitive::U32BE => mem::size_of::<u32>(),
+            Primitive::U64BE => mem::size_of::<u64>(),
+            Primitive::U128BE => mem::size_of::<u128>(),
         }
     }
 }
@@ -52,6 +72,16 @@ impl Type {
             "u32" => Ok(Type::Primitive(Primitive::U32)),
             "u64" => Ok(Type::Primitive(Primitive::U64)),
             "u128" => Ok(Type::Primitive(Primitive::U128)),
+            "u8le" => Ok(Type::Primitive(Primitive::U8LE)),
+            "u16le" => Ok(Type::Primitive(Primitive::U16LE)),
+            "u32le" => Ok(Type::Primitive(Primitive::U32LE)),
+            "u64le" => Ok(Type::Primitive(Primitive::U64LE)),
+            "u128le" => Ok(Type::Primitive(Primitive::U128LE)),
+            "u8be" => Ok(Type::Primitive(Primitive::U8BE)),
+            "u16be" => Ok(Type::Primitive(Primitive::U16BE)),
+            "u32be" => Ok(Type::Primitive(Primitive::U32BE)),
+            "u64be" => Ok(Type::Primitive(Primitive::U64BE)),
+            "u128be" => Ok(Type::Primitive(Primitive::U128BE)),
             other => {
                 if let Some(arg) = input.strip_prefix('[') {
                     if let Some(arg) = arg.strip_suffix(']') {
@@ -71,6 +101,16 @@ impl Type {
                             "u32" => Primitive::U32,
                             "u64" => Primitive::U64,
                             "u128" => Primitive::U128,
+                            "u8le" => Primitive::U8LE,
+                            "u16le" => Primitive::U16LE,
+                            "u32le" => Primitive::U32LE,
+                            "u64le" => Primitive::U64LE,
+                            "u128le" => Primitive::U128LE,
+                            "u8be" => Primitive::U8BE,
+                            "u16be" => Primitive::U16BE,
+                            "u32be" => Primitive::U32BE,
+                            "u64be" => Primitive::U64BE,
+                            "u128be" => Primitive::U128BE,
                             invalid => return Err(compile_error(format_args!("'as' array expression '{}' has invalid type '{}'", other, invalid))),
                         };
                         match arr_size.parse() {
@@ -158,6 +198,96 @@ impl Primitive {
                 }
                 written
             },
+            Primitive::U8LE => {
+                let mut written = 0;
+                for chunk in bytes.chunks_exact(1) {
+                    written += chunk.len();
+                    let byte = u8::from_le_bytes([chunk[0]]);
+                    core::fmt::write(out, format_args!("0x{:x}u8, ", byte)).expect("To write string");
+                }
+                written
+            },
+            Primitive::U16LE => {
+                let mut written = 0;
+                for chunk in bytes.chunks_exact(2) {
+                    written += chunk.len();
+                    let byte = u16::from_le_bytes([chunk[0], chunk[1]]);
+                    core::fmt::write(out, format_args!("0x{:x}u16, ", byte)).expect("To write string");
+                }
+                written
+            },
+            Primitive::U32LE => {
+                let mut written = 0;
+                for chunk in bytes.chunks_exact(4) {
+                    written += chunk.len();
+                    let byte = u32::from_le_bytes([chunk[0], chunk[1], chunk[2], chunk[3]]);
+                    core::fmt::write(out, format_args!("0x{:x}u32, ", byte)).expect("To write string");
+                }
+                written
+            }
+            Primitive::U64LE => {
+                let mut written = 0;
+                for chunk in bytes.chunks_exact(8) {
+                    written += chunk.len();
+                    let byte = u64::from_le_bytes([chunk[0], chunk[1], chunk[2], chunk[3], chunk[4], chunk[5], chunk[6], chunk[7]]);
+                    core::fmt::write(out, format_args!("0x{:x}u64, ", byte)).expect("To write string");
+                }
+                written
+            },
+            Primitive::U128LE => {
+                let mut written = 0;
+                for chunk in bytes.chunks_exact(16) {
+                    written += chunk.len();
+                    let byte = u128::from_le_bytes([chunk[0], chunk[1], chunk[2], chunk[3], chunk[4], chunk[5], chunk[6], chunk[7], chunk[8], chunk[9], chunk[10], chunk[11], chunk[12], chunk[13], chunk[14], chunk[15]]);
+                    core::fmt::write(out, format_args!("0x{:x}u128, ", byte)).expect("To write string");
+                }
+                written
+            },
+            Primitive::U8BE => {
+                let mut written = 0;
+                for chunk in bytes.chunks_exact(1) {
+                    written += chunk.len();
+                    let byte = u8::from_be_bytes([chunk[0]]);
+                    core::fmt::write(out, format_args!("0x{:x}u8, ", byte)).expect("To write string");
+                }
+                written
+            },
+            Primitive::U16BE => {
+                let mut written = 0;
+                for chunk in bytes.chunks_exact(2) {
+                    written += chunk.len();
+                    let byte = u16::from_be_bytes([chunk[0], chunk[1]]);
+                    core::fmt::write(out, format_args!("0x{:x}u16, ", byte)).expect("To write string");
+                }
+                written
+            },
+            Primitive::U32BE => {
+                let mut written = 0;
+                for chunk in bytes.chunks_exact(4) {
+                    written += chunk.len();
+                    let byte = u32::from_be_bytes([chunk[0], chunk[1], chunk[2], chunk[3]]);
+                    core::fmt::write(out, format_args!("0x{:x}u32, ", byte)).expect("To write string");
+                }
+                written
+            }
+            Primitive::U64BE => {
+                let mut written = 0;
+                for chunk in bytes.chunks_exact(8) {
+                    written += chunk.len();
+                    let byte = u64::from_be_bytes([chunk[0], chunk[1], chunk[2], chunk[3], chunk[4], chunk[5], chunk[6], chunk[7]]);
+                    core::fmt::write(out, format_args!("0x{:x}u64, ", byte)).expect("To write string");
+                }
+                written
+            },
+            Primitive::U128BE => {
+                let mut written = 0;
+                for chunk in bytes.chunks_exact(16) {
+                    written += chunk.len();
+                    let byte = u128::from_be_bytes([chunk[0], chunk[1], chunk[2], chunk[3], chunk[4], chunk[5], chunk[6], chunk[7], chunk[8], chunk[9], chunk[10], chunk[11], chunk[12], chunk[13], chunk[14], chunk[15]]);
+                    core::fmt::write(out, format_args!("0x{:x}u128, ", byte)).expect("To write string");
+                }
+                written
+            },
         }
     }
 }
@@ -170,6 +300,16 @@ impl fmt::Display for Primitive {
             Primitive::U32 => fmt.write_str("u32"),
             Primitive::U64 => fmt.write_str("u64"),
             Primitive::U128 => fmt.write_str("u128"),
+            Primitive::U8LE => fmt.write_str("u8le"),
+            Primitive::U16LE => fmt.write_str("u16le"),
+            Primitive::U32LE => fmt.write_str("u32le"),
+            Primitive::U64LE => fmt.write_str("u64le"),
+            Primitive::U128LE => fmt.write_str("u128le"),
+            Primitive::U8BE => fmt.write_str("u8be"),
+            Primitive::U16BE => fmt.write_str("u16be"),
+            Primitive::U32BE => fmt.write_str("u32be"),
+            Primitive::U64BE => fmt.write_str("u64be"),
+            Primitive::U128BE => fmt.write_str("u128be"),
         }
     }
 }
@@ -233,6 +373,9 @@ impl<'a> Input<'a> {
 ///
 ///To reinterpret it as different type add `as <type>` where type can be: `u8`, `u16`, `u32`, `u64` or `u128`.
 ///
+///Change the endianness of the type by adding `le` or `be` suffix, e.g. `u16le` or `u32be`.
+///The default endianness is native.
+///
 ///# NOTE:
 ///
 ///Due to `Span::source_file` being unstable, the file is searched relative to crate root.
@@ -253,6 +396,7 @@ impl<'a> Input<'a> {
 ///let bytes_u16_2 = include_bytes!("tests/include with whitespaces.in" as u16);
 ///let bytes_u16_3 = include_bytes!("tests/include with whitespaces.in" as [u8; 48]);
 ///let bytes_u16_4 = include_bytes!("tests/include with whitespaces.in" as [u16; 12]);
+///let bytes_u16be = include_bytes!("tests/include.in" as u16be);
 ///
 ///assert_eq!(bytes.len(), bytes_u16.len() * 2);
 ///assert_eq!(bytes.len(), bytes_u16_2.len() * 2);
@@ -261,6 +405,7 @@ impl<'a> Input<'a> {
 ///assert_eq!(bytes_u16_4.len(), 2);
 ///assert_eq!(bytes_u16_4[0].len(), 12);
 ///assert_eq!(bytes_u16_4[1].len(), 12);
+///assert_eq!(bytes_u16be.len(), bytes_u16.len());
 ///```
 ///
 ///# Debugging timings:
