@@ -156,7 +156,7 @@ impl Primitive {
     ///returns number of bytes written.
     fn write_bytes<O: fmt::Write>(&self, out: &mut O, bytes: &[u8]) -> usize {
         match self {
-            Primitive::U8 => {
+            Primitive::U8 | Primitive::U8LE | Primitive::U8BE => {
                 for byte in bytes {
                     core::fmt::write(out, format_args!("0x{:x}u8, ", byte)).expect("To write string");
                 }
@@ -198,15 +198,6 @@ impl Primitive {
                 }
                 written
             },
-            Primitive::U8LE => {
-                let mut written = 0;
-                for chunk in bytes.chunks_exact(1) {
-                    written += chunk.len();
-                    let byte = u8::from_le_bytes([chunk[0]]);
-                    core::fmt::write(out, format_args!("0x{:x}u8, ", byte)).expect("To write string");
-                }
-                written
-            },
             Primitive::U16LE => {
                 let mut written = 0;
                 for chunk in bytes.chunks_exact(2) {
@@ -240,15 +231,6 @@ impl Primitive {
                     written += chunk.len();
                     let byte = u128::from_le_bytes([chunk[0], chunk[1], chunk[2], chunk[3], chunk[4], chunk[5], chunk[6], chunk[7], chunk[8], chunk[9], chunk[10], chunk[11], chunk[12], chunk[13], chunk[14], chunk[15]]);
                     core::fmt::write(out, format_args!("0x{:x}u128, ", byte)).expect("To write string");
-                }
-                written
-            },
-            Primitive::U8BE => {
-                let mut written = 0;
-                for chunk in bytes.chunks_exact(1) {
-                    written += chunk.len();
-                    let byte = u8::from_be_bytes([chunk[0]]);
-                    core::fmt::write(out, format_args!("0x{:x}u8, ", byte)).expect("To write string");
                 }
                 written
             },
