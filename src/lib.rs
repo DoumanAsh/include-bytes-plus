@@ -44,7 +44,7 @@ impl Primitive {
             Primitive::U64 => mem::size_of::<u64>(),
             Primitive::U128 => mem::size_of::<u128>(),
             Primitive::U8LE => mem::size_of::<u8>(),
-            Primitive::U16LE => mem::size_of::<u16>(),  
+            Primitive::U16LE => mem::size_of::<u16>(),
             Primitive::U32LE => mem::size_of::<u32>(),
             Primitive::U64LE => mem::size_of::<u64>(),
             Primitive::U128LE => mem::size_of::<u128>(),
@@ -358,7 +358,8 @@ impl<'a> Input<'a> {
 ///You can use an endianness suffix to change the expected endianness within a file.
 ///When endianness is specified the macro shall treat integers within a file correspondingly to the suffix and
 ///convert it to the target's native endianness. Allowed suffixes: le and be, eg. `u16le` or `u32be`.
-///The default endianness is native.
+///
+///Without suffix, bytes are extracted as it is.
 ///
 ///# NOTE:
 ///
@@ -381,6 +382,7 @@ impl<'a> Input<'a> {
 ///let bytes_u16_3 = include_bytes!("tests/include with whitespaces.in" as [u8; 48]);
 ///let bytes_u16_4 = include_bytes!("tests/include with whitespaces.in" as [u16; 12]);
 ///let bytes_u16be = include_bytes!("tests/include.in" as u16be);
+///let bytes_u16be_4 = include_bytes!("tests/include with whitespaces.in" as [u16be; 12]);
 ///
 ///assert_eq!(bytes.len(), bytes_u16.len() * 2);
 ///assert_eq!(bytes.len(), bytes_u16_2.len() * 2);
@@ -390,6 +392,11 @@ impl<'a> Input<'a> {
 ///assert_eq!(bytes_u16_4[0].len(), 12);
 ///assert_eq!(bytes_u16_4[1].len(), 12);
 ///assert_eq!(bytes_u16be.len(), bytes_u16.len());
+///assert_eq!(bytes_u16be_4.len(), 2);
+///assert_eq!(bytes_u16be_4[0].len(), 12);
+///assert_eq!(bytes_u16be_4[1].len(), 12);
+///#[cfg(target_endian = "little")]
+///assert_ne!(bytes_u16_4, bytes_u16be_4);
 ///```
 ///
 ///# Debugging timings:

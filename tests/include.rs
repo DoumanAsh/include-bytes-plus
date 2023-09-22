@@ -149,7 +149,6 @@ fn should_include_array_u16le_single() {
     assert!(included == expected, "included doesn't match expected file output");
 }
 
-#[cfg(target_endian = "little")]
 #[test]
 fn should_include_array_u16be_single() {
     let included = include_bytes!("tests/include.in" as [u16be; 24]);
