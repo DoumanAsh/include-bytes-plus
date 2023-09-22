@@ -355,7 +355,7 @@ impl<'a> Input<'a> {
 ///
 ///To reinterpret it as different type add `as <type>` where type can be: `u8`, `u16`, `u32`, `u64` or `u128`.
 ///
-///Change the endianness of the type by adding `le` or `be` suffix, e.g. `u16le` or `u32be`.
+///Change the endianness of how the file is interpreted by adding `le` or `be` suffix, e.g. `u16le` or `u32be`.
 ///The default endianness is native.
 ///
 ///# NOTE:
